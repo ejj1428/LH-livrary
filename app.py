@@ -1,39 +1,85 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="LH숲속작은도서관", page_icon="📚")
-st.markdown("### 📚 LH숲속작은도서관 도서 검색")
+# 1. 페이지 설정 및 디자인 커스텀
+st.set_page_config(page_title="LH숲속작은도서관", page_icon="📚", layout="centered")
 
-# 파일 읽기 함수
+# CSS를 이용한 도서관 스타일 꾸미기
+st.markdown("""
+    <style>
+    /* 전체 배경색과 글꼴 */
+    .stApp {
+        background-color: #fdfaf5; /* 따뜻한 종이 느낌의 배경색 */
+    }
+    
+    /* 제목 스타일 */
+    .main-title {
+        font-size: 28px !important;
+        color: #2c3e50;
+        font-weight: 800;
+        text-align: center;
+        padding-top: 10px;
+        margin-bottom: 0px;
+    }
+    
+    /* 부제목 스타일 */
+    .sub-title {
+        font-size: 14px !important;
+        color: #7f8c8d;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    /* 검색창 박스 스타일 */
+    .stTextInput > div > div > input {
+        border-radius: 20px;
+        border: 2px solid #d35400; /* 포인트 컬러: 따뜻한 주황색 */
+    }
+    </style>
+    
+    <div class="main-title">🌳 LH숲속작은도서관 📚</div>
+    <div class="sub-title">우리 마을의 작은 쉼터, 책 속에서 보물을 찾아보세요.</div>
+    """, unsafe_allow_html=True)
+
+# 2. 데이터 로드 (캐싱 처리)
 @st.cache_data
 def load_data():
     try:
-        # 새로 저장한 .xlsx 파일을 읽어옵니다.
         df = pd.read_excel('books.xlsx')
-        # 열 이름의 앞뒤 공백을 제거합니다.
         df.columns = [str(c).strip() for c in df.columns]
         return df
-    except Exception as e:
-        st.error(f"파일을 찾을 수 없습니다. 이름이 'books.xlsx'인지 확인해 주세요!")
+    except Exception:
         return None
 
 df = load_data()
 
+# 3. 본문 구성
 if df is not None:
-    # 엑셀 열 이름 확인 (사진 기준: 서명, 저자, 출판사)
-    search_cols = ['서명', '저자', '출판사']
-    # 혹시 엑셀에 위 이름이 없을 경우를 대비해 실제 존재하는 열만 선택
-    available_cols = [c for c in search_cols if c in df.columns]
-
-    keyword = st.text_input("🔍 찾으시는 책 제목이나 저자를 입력하세요", placeholder="예: 나의 미래, 무라카미 등")
+    # 검색 영역을 카드로 감싼 듯한 느낌 주기
+    with st.container():
+        keyword = st.text_input("", placeholder="어떤 책을 찾으시나요? (제목 또는 저자 입력)")
 
     if keyword:
-        # 선택한 열들에서 검색어 찾기
+        # 검색 필터링
+        search_cols = ['서명', '저자', '출판사']
+        available_cols = [c for c in search_cols if c in df.columns]
+        
         mask = df[available_cols].astype(str).apply(lambda x: x.str.contains(keyword, case=False)).any(axis=1)
         result = df[mask]
         
-        st.info(f"총 {len(result)}권의 검색 결과가 있습니다.")
-        # 필요한 정보만 표로 보여주기
-        st.dataframe(result[available_cols], use_container_width=True, hide_index=True)
+        if len(result) > 0:
+            st.success(f"✨ 검색된 도서는 총 {len(result)}권입니다.")
+            # 표 디자인: 인덱스 숨기고 깔끔하게
+            st.dataframe(result[available_cols], use_container_width=True, hide_index=True)
+        else:
+            st.warning("🧐 찾는 도서가 없습니다. 다른 검색어를 입력해 보세요.")
     else:
-        st.write("📖 검색어를 입력하면 도서 목록이 나타납니다.")
+        # 초기 화면 가이드
+        st.write("")
+        st.info("💡 위 검색창에 책 제목이나 작가 이름을 입력하고 엔터를 눌러주세요.")
+        
+        # 도서관 추천 문구 같은 장식
+        st.markdown("---")
+        st.caption("📍 위치: LH 6단지 커뮤니티 센터 내 2층")
+else:
+    st.error("❌ 'books.xlsx' 파일을 불러올 수 없습니다. 파일명을 확인해 주세요!")
