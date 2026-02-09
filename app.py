@@ -28,7 +28,7 @@ st.markdown("""
     
     <div class="notice-box">
         ⚠️ <b>안내:</b> 대출 여부는 실시간으로 반영되지 않습니다. <br>
-       <span style="margin-left: 20px;">도서관에 문의해주세요.^^</span>
+       <span style="margin-left: 30px;">도서관에 문의해주세요.^^</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -66,5 +66,6 @@ if df is not None:
         st.caption("📍 위치: LH사동휴먼시아2단지 203동 1층")
 else:
     st.error("❌ 'books.xlsx' 파일을 불러올 수 없습니다.")
+
 
 
