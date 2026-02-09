@@ -63,7 +63,8 @@ if df is not None:
     else:
         st.info("💡 위 검색창에 책 제목이나 작가 이름을 입력하고 엔터를 눌러주세요.")
         st.markdown("---")
-        st.caption("📍 위치: LH 6단지 커뮤니티 센터 내 2층")
+        st.caption("📍 위치: LH사동휴먼시아2단지 203동 1층")
 else:
     st.error("❌ 'books.xlsx' 파일을 불러올 수 없습니다.")
+
 
