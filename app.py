@@ -27,10 +27,8 @@ st.markdown("""
     <div class="sub-title">우리 마을의 작은 쉼터, 책 속에서 보물을 찾아보세요.</div>
     
     <div class="notice-box">
-        ⚠️ <b>안내:</b> 대출 여부는 실시간으로 반영되지 않으므로 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;도서관에 문의해주세요.^^               
-    </div>
-    """, unsafe_allow_html=True)
+        ⚠️ <b>안내:</b> 대출 여부는 실시간으로 반영되지 않습니다. <br>
+        정확한 도서 상태는 도서관 데스크에 문의해 주세요.
     </div>
     """, unsafe_allow_html=True)
 
@@ -68,8 +66,3 @@ if df is not None:
         st.caption("📍 위치: LH 6단지 커뮤니티 센터 내 2층")
 else:
     st.error("❌ 'books.xlsx' 파일을 불러올 수 없습니다.")
-
-
-
-
-
